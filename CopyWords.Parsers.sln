@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopyWords.Parsers.Tests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26449F43-91BC-477E-A7A6-D99AB506B21C}"
 	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 		RuleSet.ruleset = RuleSet.ruleset
 	EndProjectSection
 EndProject
