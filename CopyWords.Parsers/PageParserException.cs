@@ -17,5 +17,10 @@ namespace CopyWords.Parsers
             : base(message, inner)
         {
         }
+
+        protected PageParserException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text.RegularExpressions;
-using CopyWords.Parsers.Models;
-using System.Threading.Tasks;
 using System.Text;
-using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using CopyWords.Parsers.Models;
 
 namespace CopyWords.Parsers
 {

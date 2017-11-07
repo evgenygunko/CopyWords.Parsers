@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopyWords.Parsers", "CopyWo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopyWords.Parsers.Tests", "CopyWords.Parsers.Tests\CopyWords.Parsers.Tests.csproj", "{CC4249D5-2E0C-4155-8BE6-FF7883904EB4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26449F43-91BC-477E-A7A6-D99AB506B21C}"
+	ProjectSection(SolutionItems) = preProject
+		RuleSet.ruleset = RuleSet.ruleset
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
