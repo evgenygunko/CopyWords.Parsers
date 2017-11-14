@@ -18,7 +18,7 @@ namespace CopyWords.Parsers.Tests
             _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
-        #region LoadStream tests
+        #region LoadHtml tests
 
         [TestMethod]
         public void LoadHtml_DoesntThowExpception_ForValidString()
@@ -248,6 +248,22 @@ namespace CopyWords.Parsers.Tests
             parser.LoadHtml(content);
 
             string expected = "1. [slidt] er det lille dannebrog, der vajende fra sin hvide flagstang pryder pudens forside.";
+
+            List<string> examples = parser.ParseExamples();
+
+            Assert.AreEqual(1, examples.Count);
+            Assert.AreEqual(expected, examples[0]);
+        }
+
+        [TestMethod]
+        public void ParseExamples_ReturnsExample_ForStiktossetPage()
+        {
+            string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("StiktossetPage.html"));
+
+            DDOPageParser parser = new DDOPageParser();
+            parser.LoadHtml(content);
+
+            string expected = "1. Du ved godt, at jeg bliver stiktosset, når du hopper i sofaen.";
 
             List<string> examples = parser.ParseExamples();
 

@@ -133,9 +133,15 @@ namespace CopyWords.Parsers
 
             if (contentBetydningerDiv != null)
             {
-                var examplesDivs = contentBetydningerDiv.SelectNodes("./div/div/div/div/span[@class='citat']");
+                // can't run XPath with a search for any depth - we want to take examples only from "top level" meaning
+                // var examplesDivs = contentBetydningerDiv.SelectNodes("descendant::span[@class='citat']");
+                var examplesDivs = contentBetydningerDiv.SelectNodes("./div/div/div/span[@class='citat']");
+                if (examplesDivs == null)
+                {
+                    examplesDivs = contentBetydningerDiv.SelectNodes("./div/div/div/div/span[@class='citat']");
+                }
 
-                if (examplesDivs != null && examplesDivs.Count > 0)
+                if (examplesDivs != null)
                 {
                     for (int i = 0; i < examplesDivs.Count; i++)
                     {
