@@ -3,11 +3,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <PackageId>CopyWords.Parsers.Evgeny</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Authors>Evgeny</Authors>
     <Description>Parsers library for Den Danske Ordbog</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageReleaseNotes>Parsing examples with one level depth</PackageReleaseNotes>
     <Copyright>Copyright 2017 (c) Contoso Corporation. All rights reserved.</Copyright>
     <PackageTags>ddo danske ordbog</PackageTags>
   </PropertyGroup>
