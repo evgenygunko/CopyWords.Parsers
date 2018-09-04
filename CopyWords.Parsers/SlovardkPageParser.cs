@@ -5,7 +5,12 @@ using HtmlAgilityPack;
 
 namespace CopyWords.Parsers
 {
-    public class SlovardkPageParser : PageParserBase
+    public interface ISlovardkPageParser : IPageParser
+    {
+        List<RussianTranslation> ParseWord();
+    }
+
+    public class SlovardkPageParser : PageParserBase, ISlovardkPageParser
     {
         /// <summary>
         /// Gets a string which contains found Danish word.

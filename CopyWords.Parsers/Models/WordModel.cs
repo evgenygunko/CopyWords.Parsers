@@ -6,6 +6,8 @@ namespace CopyWords.Parsers.Models
     {
         public string Word { get; set; }
 
+        public int Variants { get; set; }
+
         public string Endings { get; set; }
 
         public string Pronunciation { get; set; }

@@ -5,7 +5,7 @@ using HtmlAgilityPack;
 
 namespace CopyWords.Parsers
 {
-    public abstract class PageParserBase
+    public abstract class PageParserBase : IPageParser
     {
         private HtmlDocument _htmlDocument;
 

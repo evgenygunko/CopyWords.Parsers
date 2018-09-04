@@ -20,7 +20,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
+    <PackageReference Include="Moq" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CopyWords.Parsers\CopyWords.Parsers.csproj" />
@@ -51,6 +52,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestPages\SLovardk\KæmpePage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestPages\DDO\HøjPage.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestPages\DDO\HøjPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

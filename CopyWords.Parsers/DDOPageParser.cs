@@ -1,10 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CopyWords.Parsers
 {
-    public class DDOPageParser : PageParserBase
+    public interface IDDOPageParser : IPageParser
     {
+        int GetWordsCount();
+
+        string ParseWord();
+
+        string ParseEndings();
+
+        string ParsePronunciation();
+
+        string ParseSound();
+
+        string ParseDefinitions();
+
+        List<string> ParseExamples();
+    }
+
+    public class DDOPageParser : PageParserBase, IDDOPageParser
+    {
+        /// <summary>
+        /// Gets the words count for given search.
+        /// </summary>
+        /// <returns>The words count.</returns>
+        public int GetWordsCount()
+        {
+            var div = FindElementById("opslagsordBox_collapsed");
+
+            var wordsCountDiv = div.SelectSingleNode("./div/div[contains(@class, 'diskret')]");
+            if (wordsCountDiv == null)
+            {
+                throw new PageParserException("Cannot find a span element with CSS class 'diskret'");
+            }
+
+            string wordsCountText = DecodeText(wordsCountDiv.InnerText);
+
+            return ParseWordsCountText(wordsCountText);
+        }
+
         /// <summary>
         /// Gets a string which contains found Danish word.
         /// </summary>
@@ -157,6 +195,17 @@ namespace CopyWords.Parsers
             }
 
             return examples;
+        }
+
+        internal int ParseWordsCountText(string wordsCountText)
+        {
+            string numericValue = new string(wordsCountText.Where(char.IsDigit).ToArray());
+            if (int.TryParse(numericValue, out int result))
+            {
+                return result;
+            }
+
+            return 1;
         }
     }
 }

@@ -1,15 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CopyWords.Parsers.Models;
+using CopyWords.Parsers.Services;
 
 namespace CopyWords.Parsers
 {
     public class LookUpWord
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IDDOPageParser _ddoPageParser;
+        private readonly ISlovardkPageParser _slovardkPageParser;
+        private readonly IFileDownloader _fileDownloader;
+
+        public LookUpWord(IDDOPageParser ddoPageParser, ISlovardkPageParser slovardkPageParser, IFileDownloader fileDownloader)
+        {
+            _ddoPageParser = ddoPageParser ?? throw new ArgumentNullException(nameof(ddoPageParser));
+            _slovardkPageParser = slovardkPageParser ?? throw new ArgumentNullException(nameof(slovardkPageParser));
+            _fileDownloader = fileDownloader ?? throw new ArgumentNullException(nameof(fileDownloader));
+        }
 
         public (bool isValid, string errorMessage) CheckThatWordIsValid(string lookUp)
         {
@@ -35,31 +46,30 @@ namespace CopyWords.Parsers
             string ddoUrl = $"http://ordnet.dk/ddo/ordbog?query={wordToLookUp}&search=S%C3%B8g";
 
             // Download and parse a page from DDO
-            string ddoPageHtml = await DownloadPageAsync(ddoUrl, Encoding.UTF8);
+            string ddoPageHtml = await _fileDownloader.DownloadPageAsync(ddoUrl, Encoding.UTF8);
             if (string.IsNullOrEmpty(ddoPageHtml))
             {
                 return null;
             }
 
-            DDOPageParser ddoPageParser = new DDOPageParser();
-            ddoPageParser.LoadHtml(ddoPageHtml);
+            _ddoPageParser.LoadHtml(ddoPageHtml);
 
             WordModel wordModel = new WordModel();
-            wordModel.Word = ddoPageParser.ParseWord();
-            wordModel.Endings = ddoPageParser.ParseEndings();
-            wordModel.Pronunciation = ddoPageParser.ParsePronunciation();
-            wordModel.Sound = ddoPageParser.ParseSound();
-            wordModel.Definitions = ddoPageParser.ParseDefinitions();
-            wordModel.Examples = ddoPageParser.ParseExamples();
+            wordModel.Variants = _ddoPageParser.GetWordsCount();
+            wordModel.Word = _ddoPageParser.ParseWord();
+            wordModel.Endings = _ddoPageParser.ParseEndings();
+            wordModel.Pronunciation = _ddoPageParser.ParsePronunciation();
+            wordModel.Sound = _ddoPageParser.ParseSound();
+            wordModel.Definitions = _ddoPageParser.ParseDefinitions();
+            wordModel.Examples = _ddoPageParser.ParseExamples();
 
             // Download and parse a page from Slovar.dk
             string slovardkUrl = GetSlovardkUri(wordToLookUp);
 
-            string slovardkPageHtml = await DownloadPageAsync(slovardkUrl, Encoding.GetEncoding(1251));
-            SlovardkPageParser slovardkPageParser = new SlovardkPageParser();
-            slovardkPageParser.LoadHtml(slovardkPageHtml);
+            string slovardkPageHtml = await _fileDownloader.DownloadPageAsync(slovardkUrl, Encoding.GetEncoding(1251));
+            _slovardkPageParser.LoadHtml(slovardkPageHtml);
 
-            var translations = slovardkPageParser.ParseWord();
+            var translations = _slovardkPageParser.ParseWord();
             wordModel.Translations = translations;
 
             return wordModel;
@@ -74,27 +84,6 @@ namespace CopyWords.Parsers
                 .Replace(" ", "-");
 
             return $"http://www.slovar.dk/tdansk/{wordToLookUp}/?";
-        }
-
-        private async Task<string> DownloadPageAsync(string url, Encoding encoding)
-        {
-            string content = null;
-
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-                content = encoding.GetString(bytes, 0, bytes.Length - 1);
-            }
-            else
-            {
-                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
-                {
-                    throw new ServerErrorException("Server returned " + response.StatusCode);
-                }
-            }
-
-            return content;
         }
     }
 }

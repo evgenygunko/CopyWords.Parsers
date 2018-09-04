@@ -39,6 +39,34 @@ namespace CopyWords.Parsers.Tests
 
         #endregion
 
+        #region GetWordsCount tests
+
+        [TestMethod]
+        public void GetWordsCount_Returns1_ForUnderholdningPage()
+        {
+            string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("UnderholdningPage.html"));
+
+            DDOPageParser parser = new DDOPageParser();
+            parser.LoadHtml(content);
+
+            int result = parser.GetWordsCount();
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void GetWordsCount_Returns2_ForHojPage()
+        {
+            string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("HøjPage.html"));
+
+            DDOPageParser parser = new DDOPageParser();
+            parser.LoadHtml(content);
+
+            int result = parser.GetWordsCount();
+            Assert.AreEqual(2, result);
+        }
+
+        #endregion
+
         #region ParseWord tests
 
         [TestMethod]
@@ -66,7 +94,7 @@ namespace CopyWords.Parsers.Tests
         }
 
         [TestMethod]
-        public void ParseWord_ReturnsStødtand_ForUnderholdningPage()
+        public void ParseWord_ReturnsStødtand_ForStødtandPage()
         {
             string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("StødtandPage.html"));
 
@@ -323,6 +351,46 @@ namespace CopyWords.Parsers.Tests
             List<string> examples = parser.ParseExamples();
 
             Assert.AreEqual(0, examples.Count);
+        }
+
+        #endregion
+
+        #region ParseWordsCountText tests
+
+        [TestMethod]
+        public void ParseWordsCountText_Returns1_For1()
+        {
+            DDOPageParser parser = new DDOPageParser();
+            int result = parser.ParseWordsCountText("(1)");
+
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void ParseWordsCountText_Returns2_For2()
+        {
+            DDOPageParser parser = new DDOPageParser();
+            int result = parser.ParseWordsCountText("(2)");
+
+            Assert.AreEqual(2, result);
+        }
+
+        [TestMethod]
+        public void ParseWordsCountText_Returns123_For123()
+        {
+            DDOPageParser parser = new DDOPageParser();
+            int result = parser.ParseWordsCountText("(123)");
+
+            Assert.AreEqual(123, result);
+        }
+
+        [TestMethod]
+        public void ParseWordsCountText_Returns1_ForAbc()
+        {
+            DDOPageParser parser = new DDOPageParser();
+            int result = parser.ParseWordsCountText("abc");
+
+            Assert.AreEqual(1, result);
         }
 
         #endregion
