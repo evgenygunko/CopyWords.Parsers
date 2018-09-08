@@ -7,7 +7,7 @@ namespace CopyWords.Parsers
 {
     public interface IDDOPageParser : IPageParser
     {
-        int GetWordsCount();
+        List<string> ParseVariationUrls();
 
         string ParseWord();
 
@@ -28,19 +28,31 @@ namespace CopyWords.Parsers
         /// Gets the words count for given search.
         /// </summary>
         /// <returns>The words count.</returns>
-        public int GetWordsCount()
+        public List<string> ParseVariationUrls()
         {
-            var div = FindElementById("opslagsordBox_collapsed");
+            var div = FindElementById("opslagsordBox_expanded");
 
-            var wordsCountDiv = div.SelectSingleNode("./div/div[contains(@class, 'diskret')]");
-            if (wordsCountDiv == null)
+            var searchResultBoxDiv = div.SelectSingleNode("./div/div[contains(@class, 'searchResultBox')]");
+            if (searchResultBoxDiv == null)
             {
-                throw new PageParserException("Cannot find a span element with CSS class 'diskret'");
+                throw new PageParserException("Cannot find a div element with CSS class 'searchResultBox'");
             }
 
-            string wordsCountText = DecodeText(wordsCountDiv.InnerText);
+            List<string> variationUrls = new List<string>();
 
-            return ParseWordsCountText(wordsCountText);
+            var ahrefNodes = searchResultBoxDiv.SelectNodes("./div/a");
+
+            foreach (var ahref in ahrefNodes)
+            {
+                if (ahref != null && ahref.Attributes["href"] != null)
+                {
+                    string variationUrl = ahref.Attributes["href"].Value;
+
+                    variationUrls.Add(variationUrl);
+                }
+            }
+
+            return variationUrls;
         }
 
         /// <summary>
@@ -195,17 +207,6 @@ namespace CopyWords.Parsers
             }
 
             return examples;
-        }
-
-        internal int ParseWordsCountText(string wordsCountText)
-        {
-            string numericValue = new string(wordsCountText.Where(char.IsDigit).ToArray());
-            if (int.TryParse(numericValue, out int result))
-            {
-                return result;
-            }
-
-            return 1;
         }
     }
 }

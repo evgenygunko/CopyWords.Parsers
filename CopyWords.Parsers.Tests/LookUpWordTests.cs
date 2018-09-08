@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CopyWords.Parsers;
@@ -84,32 +85,22 @@ namespace CopyWords.Parsers.Tests
             Assert.IsTrue(isValid, errorMessage);
         }
 
+        [DataTestMethod]
+        [DataRow(1)]
+        [DataRow(2)]
         [TestMethod]
-        public async Task LookUpWordAsync_ReturnsOneVariant_WhenDDOWordHasOneMeaning()
+        public async Task LookUpWordAsync_ReturnsVariantUrls(int variationsCount)
         {
-            const int wordsCount = 1;
+            const string wordToLookup = "any word";
 
             var ddoPageParserStub = new Mock<IDDOPageParser>();
-            ddoPageParserStub.Setup(x => x.GetWordsCount()).Returns(wordsCount);
+            ddoPageParserStub.Setup(x => x.ParseWord()).Returns(wordToLookup);
+            ddoPageParserStub.Setup(x => x.ParseVariationUrls()).Returns((new string[variationsCount]).ToList());
 
             var lookupWord = CreateLookUpWord(ddoPageParserStub.Object);
-            WordModel wordModel = await lookupWord.LookUpWordAsync("kold");
+            WordModel wordModel = await lookupWord.LookUpWordAsync(wordToLookup);
 
-            Assert.AreEqual(wordsCount, wordModel.Variants);
-        }
-
-        [TestMethod]
-        public async Task LookUpWordAsync_ReturnsTwoVariants_WhenDDOWordHasTwoMeanings()
-        {
-            const int wordsCount = 2;
-
-            var ddoPageParserStub = new Mock<IDDOPageParser>();
-            ddoPageParserStub.Setup(x => x.GetWordsCount()).Returns(wordsCount);
-
-            var lookupWord = CreateLookUpWord(ddoPageParserStub.Object);
-            WordModel wordModel = await lookupWord.LookUpWordAsync("kold");
-
-            Assert.AreEqual(wordsCount, wordModel.Variants);
+            Assert.AreEqual(variationsCount, wordModel.VariationUrls.Count);
         }
 
         private static LookUpWord CreateLookUpWord()

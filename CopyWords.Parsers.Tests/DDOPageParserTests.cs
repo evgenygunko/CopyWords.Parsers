@@ -39,30 +39,48 @@ namespace CopyWords.Parsers.Tests
 
         #endregion
 
-        #region GetWordsCount tests
+        #region ParseVariationUrls tests
 
         [TestMethod]
-        public void GetWordsCount_Returns1_ForUnderholdningPage()
+        public void ParseVariationUrls_ReturnsVariationUrls_ForUnderholdningPage()
         {
             string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("UnderholdningPage.html"));
 
             DDOPageParser parser = new DDOPageParser();
             parser.LoadHtml(content);
 
-            int result = parser.GetWordsCount();
-            Assert.AreEqual(1, result);
+            List<string> variationUrls = parser.ParseVariationUrls();
+            Assert.AreEqual(1, variationUrls.Count);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=underholdning&amp;query=underholdning", variationUrls[0].ToLower());
         }
 
         [TestMethod]
-        public void GetWordsCount_Returns2_ForHojPage()
+        public void ParseVariationUrls_ReturnsVariationUrls_ForHojPage()
         {
             string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("HøjPage.html"));
 
             DDOPageParser parser = new DDOPageParser();
             parser.LoadHtml(content);
 
-            int result = parser.GetWordsCount();
-            Assert.AreEqual(2, result);
+            List<string> variationUrls = parser.ParseVariationUrls();
+            Assert.AreEqual(2, variationUrls.Count);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,1&amp;query=høj", variationUrls[0]);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,2&amp;query=høj", variationUrls[1]);
+        }
+
+        [TestMethod]
+        public void ParseVariationUrls_ReturnsVariationUrls_ForSkatPage()
+        {
+            string content = Helpers.GetSimpleHTMLPage(GetTestFilePath("SkatPage.html"));
+
+            DDOPageParser parser = new DDOPageParser();
+            parser.LoadHtml(content);
+
+            List<string> variationUrls = parser.ParseVariationUrls();
+            Assert.AreEqual(3, variationUrls.Count);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skat&amp;query=skat", variationUrls[0]);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skatte&amp;query=skat", variationUrls[1]);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skate&amp;query=skat", variationUrls[2]);
         }
 
         #endregion
@@ -186,7 +204,7 @@ namespace CopyWords.Parsers.Tests
             parser.LoadHtml(content);
 
             string pronunciation = parser.ParseSound();
-            Assert.AreEqual("http://static.ordnet.dk/mp3/12004/12004770_1.mp3", pronunciation);
+            Assert.AreEqual("https://static.ordnet.dk/mp3/12004/12004770_1.mp3", pronunciation);
         }
 
         [TestMethod]
@@ -351,46 +369,6 @@ namespace CopyWords.Parsers.Tests
             List<string> examples = parser.ParseExamples();
 
             Assert.AreEqual(0, examples.Count);
-        }
-
-        #endregion
-
-        #region ParseWordsCountText tests
-
-        [TestMethod]
-        public void ParseWordsCountText_Returns1_For1()
-        {
-            DDOPageParser parser = new DDOPageParser();
-            int result = parser.ParseWordsCountText("(1)");
-
-            Assert.AreEqual(1, result);
-        }
-
-        [TestMethod]
-        public void ParseWordsCountText_Returns2_For2()
-        {
-            DDOPageParser parser = new DDOPageParser();
-            int result = parser.ParseWordsCountText("(2)");
-
-            Assert.AreEqual(2, result);
-        }
-
-        [TestMethod]
-        public void ParseWordsCountText_Returns123_For123()
-        {
-            DDOPageParser parser = new DDOPageParser();
-            int result = parser.ParseWordsCountText("(123)");
-
-            Assert.AreEqual(123, result);
-        }
-
-        [TestMethod]
-        public void ParseWordsCountText_Returns1_ForAbc()
-        {
-            DDOPageParser parser = new DDOPageParser();
-            int result = parser.ParseWordsCountText("abc");
-
-            Assert.AreEqual(1, result);
         }
 
         #endregion
