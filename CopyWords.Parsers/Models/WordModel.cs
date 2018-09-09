@@ -6,7 +6,7 @@ namespace CopyWords.Parsers.Models
     {
         public string Word { get; set; }
 
-        public List<string> VariationUrls { get; set; }
+        public List<VariationUrl> VariationUrls { get; set; }
 
         public string Endings { get; set; }
 

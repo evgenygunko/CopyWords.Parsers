@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CopyWords.Parsers.Models;
 
 namespace CopyWords.Parsers
 {
     public interface IDDOPageParser : IPageParser
     {
-        List<string> ParseVariationUrls();
+        List<VariationUrl> ParseVariationUrls();
 
         string ParseWord();
 
@@ -28,7 +29,7 @@ namespace CopyWords.Parsers
         /// Gets the words count for given search.
         /// </summary>
         /// <returns>The words count.</returns>
-        public List<string> ParseVariationUrls()
+        public List<VariationUrl> ParseVariationUrls()
         {
             var div = FindElementById("opslagsordBox_expanded");
 
@@ -38,7 +39,7 @@ namespace CopyWords.Parsers
                 throw new PageParserException("Cannot find a div element with CSS class 'searchResultBox'");
             }
 
-            List<string> variationUrls = new List<string>();
+            List<VariationUrl> variationUrls = new List<VariationUrl>();
 
             var ahrefNodes = searchResultBoxDiv.SelectNodes("./div/a");
 
@@ -46,9 +47,33 @@ namespace CopyWords.Parsers
             {
                 if (ahref != null && ahref.Attributes["href"] != null)
                 {
-                    string variationUrl = ahref.Attributes["href"].Value;
+                    string word = ahref.ParentNode
+                        .InnerText
+                        .Trim();
 
-                    variationUrls.Add(variationUrl);
+                    // replace any sequence of spaces or tabs with a single space
+                    char[] separators = new char[] { ' ', '\r', '\t', '\n' };
+
+                    string[] temp = word.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                    word = string.Join(" ", temp);
+
+                    // decorade variant number with parenthesis
+                    Match match = Regex.Match(word, "([0-9]+)");
+                    if (match.Success)
+                    {
+                        string v = match.Groups[0].Value;
+                        word = word.Replace(v, $"({v})");
+                    }
+
+                    word = word.Replace("&nbsp;", " ->");
+
+                    string variationUrl = DecodeText(ahref.Attributes["href"].Value);
+
+                    variationUrls.Add(new VariationUrl()
+                    {
+                        Word = word,
+                        URL = variationUrl
+                    });
                 }
             }
 

@@ -93,9 +93,20 @@ namespace CopyWords.Parsers.Tests
         {
             const string wordToLookup = "any word";
 
+            List<VariationUrl> variationUrls = new List<VariationUrl>();
+
+            for (int i = 0; i < variationsCount; i++)
+            {
+                variationUrls.Add(new VariationUrl()
+                {
+                    Word = wordToLookup + i,
+                    URL = "http://utl_to_lookup" + i
+                });
+            }
+
             var ddoPageParserStub = new Mock<IDDOPageParser>();
             ddoPageParserStub.Setup(x => x.ParseWord()).Returns(wordToLookup);
-            ddoPageParserStub.Setup(x => x.ParseVariationUrls()).Returns((new string[variationsCount]).ToList());
+            ddoPageParserStub.Setup(x => x.ParseVariationUrls()).Returns(variationUrls);
 
             var lookupWord = CreateLookUpWord(ddoPageParserStub.Object);
             WordModel wordModel = await lookupWord.LookUpWordAsync(wordToLookup);

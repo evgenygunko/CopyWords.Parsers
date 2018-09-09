@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using CopyWords.Parsers.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CopyWords.Parsers.Tests
@@ -49,9 +50,10 @@ namespace CopyWords.Parsers.Tests
             DDOPageParser parser = new DDOPageParser();
             parser.LoadHtml(content);
 
-            List<string> variationUrls = parser.ParseVariationUrls();
+            List<VariationUrl> variationUrls = parser.ParseVariationUrls();
             Assert.AreEqual(1, variationUrls.Count);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=underholdning&amp;query=underholdning", variationUrls[0].ToLower());
+            Assert.AreEqual("underholdning sb.", variationUrls[0].Word.ToLower());
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=underholdning&query=underholdning", variationUrls[0].URL.ToLower());
         }
 
         [TestMethod]
@@ -62,10 +64,14 @@ namespace CopyWords.Parsers.Tests
             DDOPageParser parser = new DDOPageParser();
             parser.LoadHtml(content);
 
-            List<string> variationUrls = parser.ParseVariationUrls();
+            List<VariationUrl> variationUrls = parser.ParseVariationUrls();
             Assert.AreEqual(2, variationUrls.Count);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,1&amp;query=høj", variationUrls[0]);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,2&amp;query=høj", variationUrls[1]);
+
+            Assert.AreEqual("høj(1) sb.", variationUrls[0].Word);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,1&query=høj", variationUrls[0].URL);
+
+            Assert.AreEqual("høj(2) adj.", variationUrls[1].Word);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=høj,2&query=høj", variationUrls[1].URL);
         }
 
         [TestMethod]
@@ -76,11 +82,17 @@ namespace CopyWords.Parsers.Tests
             DDOPageParser parser = new DDOPageParser();
             parser.LoadHtml(content);
 
-            List<string> variationUrls = parser.ParseVariationUrls();
+            List<VariationUrl> variationUrls = parser.ParseVariationUrls();
             Assert.AreEqual(3, variationUrls.Count);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skat&amp;query=skat", variationUrls[0]);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skatte&amp;query=skat", variationUrls[1]);
-            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skate&amp;query=skat", variationUrls[2]);
+
+            Assert.AreEqual("skat sb.", variationUrls[0].Word);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skat&query=skat", variationUrls[0].URL);
+
+            Assert.AreEqual("skat -> skatte vb.", variationUrls[1].Word);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skatte&query=skat", variationUrls[1].URL);
+
+            Assert.AreEqual("skat -> skate vb.", variationUrls[2].Word);
+            Assert.AreEqual("https://ordnet.dk/ddo/ordbog?select=skate&query=skat", variationUrls[2].URL);
         }
 
         #endregion

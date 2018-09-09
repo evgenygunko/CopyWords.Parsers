@@ -15,6 +15,11 @@ namespace CopyWords.Parsers
         private readonly ISlovardkPageParser _slovardkPageParser;
         private readonly IFileDownloader _fileDownloader;
 
+        public LookUpWord()
+            : this (new DDOPageParser(), new SlovardkPageParser(), new FileDownloader())
+        {
+        }
+
         public LookUpWord(IDDOPageParser ddoPageParser, ISlovardkPageParser slovardkPageParser, IFileDownloader fileDownloader)
         {
             _ddoPageParser = ddoPageParser ?? throw new ArgumentNullException(nameof(ddoPageParser));
