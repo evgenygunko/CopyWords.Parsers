@@ -8,7 +8,6 @@
     <Description>Parsers library for Den Danske Ordbog</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>Parsing examples with one level depth</PackageReleaseNotes>
-    <Copyright>Copyright 2017 (c) Contoso Corporation. All rights reserved.</Copyright>
     <PackageTags>ddo danske ordbog</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -27,40 +27,40 @@
     <ProjectReference Include="..\CopyWords.Parsers\CopyWords.Parsers.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="TestPages\DDO\DannebrogPage.html">
+    <None Update="TestPages\ddo\DannebrogPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\GrillspydPage.html">
+    <None Update="TestPages\ddo\GrillspydPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\KiggePage.html">
+    <None Update="TestPages\ddo\KiggePage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\SimplePage.html">
+    <None Update="TestPages\ddo\SimplePage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\StiktossetPage.html">
+    <None Update="TestPages\ddo\StiktossetPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\StødtandPage.html">
+    <None Update="TestPages\ddo\StødtandPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\UnderholdningPage.html">
+    <None Update="TestPages\ddo\UnderholdningPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\SLovardk\AfgørelsePage.html">
+    <None Update="TestPages\slovardk\AfgørelsePage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\SLovardk\KæmpePage.html">
+    <None Update="TestPages\slovardk\KæmpePage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\HøjPage.htm">
+    <None Update="TestPages\ddo\HøjPage.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\HøjPage.html">
+    <None Update="TestPages\ddo\HøjPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestPages\DDO\SkatPage.html">
+    <None Update="TestPages\ddo\SkatPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
