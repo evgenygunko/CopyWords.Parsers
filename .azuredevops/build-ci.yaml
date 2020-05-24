@@ -1,0 +1,65 @@
+trigger:
+  branches:
+    include:
+    - master
+    - ci/*
+    - bug/*
+    - feature/*
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        displayName: 'dotnet build'
+        command: 'build'
+        arguments: '--configuration $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        displayName: 'dotnet test'
+        command: test
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        displayName: 'dotnet pack'
+        command: pack
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(build.sourcesdirectory)'
+        Contents: '**\bin\$(BuildConfiguration)\**'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: drop'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- stage: Sync_With_Github
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  jobs:
+  - job: Sync_With_Github
+    #pool:
+    #  name: Win10-private
+
+    steps:
+    - script: |
+        echo Push changes to Github
+
+        git config --global user.email "evgeny.gunko@gmail.com"
+        git config --global user.name "Evgeny Gunko"
+
+        echo Pulling changes from Github...
+        git pull https://github.com/evgenygunko/CopyWords.Parsers.git master --allow-unrelated-histories
+
+        echo Pushing changes to Github...
+        git remote add github https://$(githubpersonaltoken)@github.com/evgenygunko/CopyWords.Parsers.git
+        git push -u github HEAD:master
