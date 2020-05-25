@@ -42,24 +42,6 @@ stages:
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- stage: Sync_With_Github
-  dependsOn: Build
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-  jobs:
-  - job: Sync_With_Github
-    #pool:
-    #  name: Win10-private
-
-    steps:
-    - script: |
-        echo Push changes to Github
-
-        git config --global user.email "evgeny.gunko@gmail.com"
-        git config --global user.name "Evgeny Gunko"
-
-        echo Pulling changes from Github...
-        git pull https://github.com/evgenygunko/CopyWords.Parsers.git master --allow-unrelated-histories
-
-        echo Pushing changes to Github...
-        git remote add github https://$(githubpersonaltoken)@github.com/evgenygunko/CopyWords.Parsers.git
-        git push -u github HEAD:master
+- template: /.azuredevops/templates/stages-sync-with-github.yaml
+  parameters:
+    repository: CopyWords.Parsers
