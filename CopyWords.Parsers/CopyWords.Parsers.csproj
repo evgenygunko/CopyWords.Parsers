@@ -2,13 +2,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
 
-    <PackageId>CopyWords.Parsers.Evgeny</PackageId>
-    <PackageVersion>1.0.5</PackageVersion>
-    <Authors>Evgeny</Authors>
+    <PackageId>CopyWords.Parsers</PackageId>
+    <PackageVersion>1.0.8</PackageVersion>
+    <Authors>Evgeny Gunko</Authors>
     <Description>Parsers library for Den Danske Ordbog</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Parsing examples with one level depth</PackageReleaseNotes>
-    <PackageTags>ddo danske ordbog</PackageTags>
+    <PackageReleaseNotes>Parses articles on ordnet.dk/ddo</PackageReleaseNotes>
+    <PackageTags>ddo danske ordbog anki</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -27,8 +27,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
 </Project>
