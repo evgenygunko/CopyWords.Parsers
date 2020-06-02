@@ -7,15 +7,23 @@ trigger:
     - feature/*
 
 stages:
-- template: /.azuredevops/templates/stages-build-version-number.yaml
-
 - stage: Build
-  dependsOn: Build_Version_Number
 
   jobs:
   - job: Build
 
     steps:
+    - bash: |
+        echo "##vso[build.updatebuildnumber]$(major).$(minor).$(Build.BuildId)"
+      name: SetBuildName
+
+    - task: PowerShell@2
+      displayName: 'PowerShell Script - update version number in project files'
+      inputs:
+        targetType: filePath
+        arguments: "-version '$(Build.BuildNumber)'"
+        filePath: './.build/UpdateVersion.ps1'
+
     - task: DotNetCoreCLI@2
       inputs:
         displayName: 'dotnet build'
