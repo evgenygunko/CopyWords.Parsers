@@ -16,6 +16,7 @@ namespace CopyWords.Parsers.Tests
         [ClassInitialize]
         public static void ClassInitialze(TestContext context)
         {
+            _ = context;
             _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
@@ -385,7 +386,7 @@ namespace CopyWords.Parsers.Tests
 
         #endregion
 
-        private string GetTestFilePath(string fileName)
+        private static string GetTestFilePath(string fileName)
         {
             return Path.Combine(_path, "TestPages", "ddo", fileName);
         }

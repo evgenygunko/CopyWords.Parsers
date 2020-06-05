@@ -18,6 +18,7 @@ namespace CopyWords.Parsers.Tests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
+            _ = context;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 

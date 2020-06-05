@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,6 +17,7 @@ namespace CopyWords.Parsers.Tests
         [ClassInitialize]
         public static void ClassInitialze(TestContext context)
         {
+            _ = context;
             _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             _encoding1251 = CodePagesEncodingProvider.Instance.GetEncoding(1251);
         }
@@ -23,7 +27,7 @@ namespace CopyWords.Parsers.Tests
         {
             string fileContent = Helpers.GetSimpleHTMLPage(GetTestFilePath("AfgørelsePage.html"), _encoding1251);
 
-            Assert.IsTrue(fileContent.Contains("решение, улаживание"));
+            Assert.IsTrue(fileContent.Contains("решение, улаживание", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [TestMethod]
@@ -65,7 +69,7 @@ namespace CopyWords.Parsers.Tests
             Assert.AreEqual("огромный", translations[2].Translation);
         }
 
-        private string GetTestFilePath(string fileName)
+        private static string GetTestFilePath(string fileName)
         {
             return Path.Combine(_path, "TestPages", "slovardk", fileName);
         }

@@ -27,7 +27,9 @@ namespace CopyWords.Parsers
             _fileDownloader = fileDownloader ?? throw new ArgumentNullException(nameof(fileDownloader));
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public (bool isValid, string errorMessage) CheckThatWordIsValid(string lookUp)
+#pragma warning restore CA1822 // Mark members as static
         {
             Regex regex = new Regex(@"^[\w ]+$");
             bool isValid = regex.IsMatch(lookUp);

@@ -283,7 +283,7 @@ namespace CopyWords.Parsers.Tests
             if (wrongCodes.Any())
             {
                 string message = string.Format(
-                "Word codes in the must have length = {0}. The following {1} codes do not satisfy this rule:{2}{3}",
+                    "Word codes in the must have length = {0}. The following {1} codes do not satisfy this rule:{2}{3}",
                     ExpectedCodeLength,
                     wrongCodes.Count(),
                     Environment.NewLine,
