@@ -28,25 +28,20 @@ stages:
         filePath: './.build/UpdateVersion.ps1'
 
     - task: DotNetCoreCLI@2
+      displayName: "dotnet test"
       inputs:
-        command: test
-        arguments: '--configuration $(buildConfiguration) --collect "XPlat Code coverage"'
-
-    - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.5.8'
-      displayName: 'Install ReportGenerator tool'
-
-    - script: |
-        dotnet tool install dotnet-reportgenerator-globaltool --tool-path .
-        ./reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:'HtmlInline_AzurePipelines;Cobertura'
-      displayName: Create Code Coverage Report
+        command: 'test'
+        arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
+        publishTestResults: true
 
     - task: PublishCodeCoverageResults@1
-      displayName: 'Publish code coverage'
+      displayName: 'Publish code coverage report'
       inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
     - task: DotNetCoreCLI@2
+      displayName: "dotnet pack"
       inputs:
         displayName: 'dotnet pack'
         command: pack
