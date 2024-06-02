@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <PackageId>CopyWords.Parsers</PackageId>
-    <PackageVersion>1.0.8</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <Authors>Evgeny Gunko</Authors>
     <Description>Parsers library for Den Danske Ordbog</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
