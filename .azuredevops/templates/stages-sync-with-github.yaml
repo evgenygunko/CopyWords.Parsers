@@ -19,7 +19,7 @@ stages:
 
         git config --global user.email "evgeny.gunko@gmail.com"
         git config --global user.name "Evgeny Gunko"
-        git config --global pull.ff true
+        git config --global pull.rebase true
 
         echo Pulling changes from Github repository: https://github.com/evgenygunko/${{ parameters.repository }}.git
         git pull https://github.com/evgenygunko/${{ parameters.repository }}.git master --allow-unrelated-histories
