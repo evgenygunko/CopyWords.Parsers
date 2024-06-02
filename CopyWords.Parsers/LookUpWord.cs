@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,15 +14,18 @@ namespace CopyWords.Parsers
         private readonly IFileDownloader _fileDownloader;
 
         public LookUpWord()
-            : this (new DDOPageParser(), new SlovardkPageParser(), new FileDownloader())
+            : this(new DDOPageParser(), new SlovardkPageParser(), new FileDownloader())
         {
         }
 
-        public LookUpWord(IDDOPageParser ddoPageParser, ISlovardkPageParser slovardkPageParser, IFileDownloader fileDownloader)
+        public LookUpWord(
+            IDDOPageParser ddoPageParser,
+            ISlovardkPageParser slovardkPageParser,
+            IFileDownloader fileDownloader)
         {
-            _ddoPageParser = ddoPageParser ?? throw new ArgumentNullException(nameof(ddoPageParser));
-            _slovardkPageParser = slovardkPageParser ?? throw new ArgumentNullException(nameof(slovardkPageParser));
-            _fileDownloader = fileDownloader ?? throw new ArgumentNullException(nameof(fileDownloader));
+            _ddoPageParser = ddoPageParser;
+            _slovardkPageParser = slovardkPageParser;
+            _fileDownloader = fileDownloader;
         }
 
 #pragma warning disable CA1822 // Mark members as static
@@ -37,7 +38,7 @@ namespace CopyWords.Parsers
             return (isValid, isValid ? null : "Search can only contain alphanumeric characters and spaces.");
         }
 
-        public async Task<WordModel> LookUpWordAsync(string wordToLookUp)
+        public async Task<WordModel> LookUpWordAsync(string wordToLookUp, bool useSlovardk)
         {
             if (string.IsNullOrEmpty(wordToLookUp))
             {
@@ -52,18 +53,18 @@ namespace CopyWords.Parsers
 
             string url = $"http://ordnet.dk/ddo/ordbog?query={wordToLookUp}&search=S%C3%B8g";
 
-            WordModel wordModel = await DownloadPageAndParseWordAsync(url);
+            WordModel wordModel = await DownloadPageAndParseWordAsync(url, useSlovardk);
             return wordModel;
         }
 
-        public async Task<WordModel> GetWordVariationAsync(string url)
+        public async Task<WordModel> GetWordVariationAsync(string url, bool useSlovardk)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new ArgumentException("url cannot be null or empty.");
             }
 
-            WordModel wordModel = await DownloadPageAndParseWordAsync(url);
+            WordModel wordModel = await DownloadPageAndParseWordAsync(url, useSlovardk);
             return wordModel;
         }
 
@@ -78,7 +79,7 @@ namespace CopyWords.Parsers
             return $"http://www.slovar.dk/tdansk/{wordToLookUp}/?";
         }
 
-        private async Task<WordModel> DownloadPageAndParseWordAsync(string url)
+        private async Task<WordModel> DownloadPageAndParseWordAsync(string url, bool useSlovardk)
         {
             // Download and parse a page from DDO
             string ddoPageHtml = await _fileDownloader.DownloadPageAsync(url, Encoding.UTF8);
@@ -98,14 +99,17 @@ namespace CopyWords.Parsers
             wordModel.Definitions = _ddoPageParser.ParseDefinitions();
             wordModel.Examples = _ddoPageParser.ParseExamples();
 
-            // Download and parse a page from Slovar.dk
-            string slovardkUrl = GetSlovardkUri(wordModel.Word);
+            if (useSlovardk)
+            {
+                // Download and parse a page from Slovar.dk
+                string slovardkUrl = GetSlovardkUri(wordModel.Word);
 
-            string slovardkPageHtml = await _fileDownloader.DownloadPageAsync(slovardkUrl, Encoding.GetEncoding(1251));
-            _slovardkPageParser.LoadHtml(slovardkPageHtml);
+                string slovardkPageHtml = await _fileDownloader.DownloadPageAsync(slovardkUrl, Encoding.GetEncoding(1251));
+                _slovardkPageParser.LoadHtml(slovardkPageHtml);
 
-            var translations = _slovardkPageParser.ParseWord();
-            wordModel.Translations = translations;
+                var translations = _slovardkPageParser.ParseWord();
+                wordModel.Translations = translations;
+            }
 
             return wordModel;
         }

@@ -110,7 +110,7 @@ namespace CopyWords.Parsers.Tests
             ddoPageParserStub.Setup(x => x.ParseVariationUrls()).Returns(variationUrls);
 
             var lookupWord = CreateLookUpWord(ddoPageParserStub.Object);
-            WordModel wordModel = await lookupWord.LookUpWordAsync(wordToLookup);
+            WordModel wordModel = await lookupWord.LookUpWordAsync(wordToLookup, useSlovardk: true);
 
             Assert.AreEqual(variationsCount, wordModel.VariationUrls.Count);
         }

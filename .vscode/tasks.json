@@ -2,18 +2,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/CopyWords.Parsers.Tests/CopyWords.Parsers.Tests.csproj"
+            "type": "dotnet",
+            "task": "build",
+            "problemMatcher": [
+                "$msCompile"
             ],
-            "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "label": "dotnet: build"
         },
         {
             "label": "test",

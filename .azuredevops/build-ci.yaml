@@ -6,6 +6,9 @@ trigger:
     - bug/*
     - feature/*
 
+pool:
+  vmImage: ubuntu-latest
+
 stages:
 - stage: Build
 
