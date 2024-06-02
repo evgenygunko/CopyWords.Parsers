@@ -30,10 +30,15 @@ foreach ($file in $projectFiles) {
         $updated = $true
     }
 
+    $xml.GetElementsByTagName("Version") | ForEach-Object{
+        Write-Host "Updating Version to:" $version
+        $_."#text" = $version
+    }
+
     if ($updated) {
         Write-Host "Project file saved"
         $xml.Save($file.FullName)
     } else {
-        Write-Host "Version property not found in the project file"
+        Write-Host "'PackageVersion' property not found in the project file"
     }
 }
